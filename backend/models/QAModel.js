@@ -20,12 +20,12 @@ const QASchema = mongoose.Schema({
     type: String,
   },
   correctOption: {
-    type: Number,
-    required: true,
-    enums: [1, 2, 3, 4]
+    type: String,
+    required: true
   },
   level: {
-    type: Number
+    type: mongoose.Types.ObjectId,
+    required: true
   }
 });
 
