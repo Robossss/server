@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: true, limit:"50mb" }))
 
 // routes
 app.use('/api/v1/auth', require('./routes/UserRoutes'))
+app.use('/api/v1/qa', require('./routes/QARoutes'))
 
 // Listen to the server
 app.listen(port, () => {
