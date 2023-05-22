@@ -1,25 +1,111 @@
 const asyncHandler = require('express-async-handler')
-
+const Module = require('../models/ModuleModel')
 
 const createModule = asyncHandler(async(req, res) => {
-    res.json({
-        msg: 'Creating modules'
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authenticated')
+    }
+    if(req.user.role !== 'admin'){
+        res.status(400)
+        throw new Error('Not authorized. Only admins allowed')
+    }
+
+    if(!req.body){
+        res.status(400)
+        throw new Error('Bad request. No body')
+    }
+
+    const { name } = req.body
+
+    if(!name) {
+        res.status(400)
+        throw new Error('Name is required')
+    }
+
+    const module = await Module.create({
+        name
     })
+
+    res.status(201).json(module)
 })
 const getModules = asyncHandler(async(req, res) => {
-    res.json({
-        msg: 'Get all modules'
-    })
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+
+    const modules = await Module.find()
+
+    res.status(200).json(modules)
 })
 const updateModule = asyncHandler(async(req, res) => {
-    res.json({
-        msg: 'Update a module'
-    })
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authenticated')
+    }
+    if(req.user.role !== 'admin'){
+        res.status(400)
+        throw new Error('Not authorized. Only admins allowed')
+    }
+
+    if(!req.body){
+        res.status(400)
+        throw new Error('Bad request. No body')
+    }
+
+    const { id } = req.params
+
+    if(!id){
+        res.status(400)
+        throw new Error('There is no id. Bad request')
+    }
+
+    const { name } = req.body
+
+    if(!name){
+        res.status(400)
+        throw new Error('Name is required')
+    }
+
+    
+    const module = await Module.findById(id)
+    
+    if(!module){
+        res.status(404)
+        throw new Error(`module with id of ${ id } does not exist`)
+    }
+
+    const updatedModule = await Module.findByIdAndUpdate(id, req.body, { new: true })
+
+    res.status(201).json(updatedModule)
 })
 const deleteModule = asyncHandler(async(req, res) => {
-    res.json({
-        msg: 'Delete a module'
-    })
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authenticated')
+    }
+    if(req.user.role !== 'admin'){
+        res.status(400)
+        throw new Error('Not authorized. Only admins allowed')
+    }
+
+    const { id } = req.params
+
+    if(!id){
+        res.status(400)
+        throw new Error('There is no id. Bad request')
+    }
+    const module = await Module.findById(id)
+    
+    if(!module){
+        res.status(404)
+        throw new Error(`module with id of ${ id } does not exist`)
+    }
+
+    await Module.findByIdAndDelete({ _id: id })
+
+    res.status(204).json({ id })
 })
 
 module.exports = {

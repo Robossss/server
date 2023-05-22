@@ -10,9 +10,10 @@ const {
 } = require('../controllers/QAController')
 
 router.post('/create', protect, createQA)
-router.get('/', protect, getQAs)
+
 
 router.route('/:id')
+        .get(protect, getQAs)
         .put(protect, updateQA)
         .delete(protect, deleteQA)
 
