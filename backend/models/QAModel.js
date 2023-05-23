@@ -25,7 +25,8 @@ const QASchema = mongoose.Schema({
   },
   level: {
     type: mongoose.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'Module'
   }
 });
 
