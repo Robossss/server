@@ -18,10 +18,6 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    otherName:{
-        type: String,
-        required: true
-    },
     role:{
         type: String,
         enums:['student', 'admin']

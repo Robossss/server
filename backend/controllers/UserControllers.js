@@ -14,40 +14,60 @@ const registerUser = asyncHandler(async(req, res) => {
 
     const { username, password, firstName, lastName, role } = req.body
 
-    if(!username) throw new Error('Username is required')
-    if(!password) throw new Error('Password is required')
-    if(!firstName) throw new Error('FirstName is required')
-    if(!lastName) throw new Error('Last Name is required')
-    if(!role) throw new Error('Role is required')
+    if (!username) {
+        res.status(400)
+        throw new Error('Username is required')
+    }
+    if (!password) {
+        res.status(400)
+        throw new Error('Password is required')
+    }
+    if (!firstName) {
+        res.status(400)
+        throw new Error('FirstName is required')
+    }
+    if (!lastName) {
+        res.status(400)
+        throw new Error('Last Name is required')
+    }
+    if (!role) {
+        throw new Error('Role is required')
+    }
 
     const roles = ['admin', 'student']
-    if (!roles.includes(role.toLowerCase())){
+    if (!roles.includes(role.toLowerCase())) {
         res.status(400)
         throw new Error('Role has to be admin or student')
     }
 
-    // check if user exists
-    const userExists = await User.findOne({ username })
+    try {
+        // check if user exists
+        const userExists = await User.findOne({ username })
 
-    if(userExists){
+        if(userExists){
+            res.status(400)
+            throw new Error(`User with username ${username} already exists`)
+        }
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
+
+        const user = await User.create({
+            username: username,
+            password: hashedPassword,
+            firstName: firstName,
+            lastName: lastName,
+            role: role
+        })
+    } catch (error) {
         res.status(400)
-        throw new Error(`User with username ${username} already exists`)
+        throw new Error(error.message)
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
-
-    const user = await User.create({
-        username: username,
-        password: hashedPassword,
-        firstName: firstName,
-        lastName: lastName,
-        otherName: req.body.otherName,
-        role: role
+    return res.status(201).json({
+        msg: `An account has been created for ${username}`
     })
-
-    res.status(201).json(user)
 
 })
 
@@ -66,6 +86,10 @@ const loginUser = asyncHandler(async(req, res) => {
     // check if user exists
     const user = await User.findOne({ username })
 
+    if (!user) {
+        res.status(404)
+        throw new Error('Invalid username or password')
+    }
 
     if (user && (await bcrypt.compare(password, user.password))){
         res.status(200).json({
