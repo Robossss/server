@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Module = require('../models/ModuleModel')
+const Lessons = require('../models/LessonModel')
 
 const createModule = asyncHandler(async(req, res) => {
     if(!req.user){
@@ -108,9 +109,39 @@ const deleteModule = asyncHandler(async(req, res) => {
     res.status(204).json({ id })
 })
 
+const getModuleLessons = asyncHandler(async (req, res) => {
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authenticated')
+    }
+
+    const { id } = req.params
+
+    if(!id){
+        res.status(400)
+        throw new Error('There is no id. Bad request')
+    }
+    const module = await Module.findById(id)
+    
+    if(!module){
+        res.status(404)
+        throw new Error(`module with id of ${ id } does not exist`)
+    }
+
+    const lessons = await Lessons.find({
+        module: module._id
+    })
+
+    res.status(200).json({
+        module,
+        lessons
+    })
+})
+
 module.exports = {
     createModule,
     getModules,
     updateModule,
-    deleteModule
+    deleteModule,
+    getModuleLessons
 }

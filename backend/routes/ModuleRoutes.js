@@ -6,7 +6,8 @@ const {
     createModule,
     getModules,
     updateModule,
-    deleteModule
+    deleteModule,
+    getModuleLessons
 } = require('../controllers/ModuleControllers')
 
 
@@ -14,6 +15,7 @@ router.post('/create', protect, createModule)
 router.get('/', protect, getModules)
 
 router.route('/:id')
+        .get(protect, getModuleLessons)
         .put(protect, updateModule)
         .delete(protect, deleteModule)
 
