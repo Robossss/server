@@ -1,5 +1,6 @@
 require('dotenv').config()
 const colors = require('colors')
+const cors = require('cors')
 const config = require('./config/env')
 const connectDB = require('./config/db')
 const { errorHandler } = require('./middleware/ErrorMiddleware')
@@ -15,6 +16,7 @@ connectDB()
 
 // Middleware
 app.use(errorHandler)
+app.use(cors())
 
 
 
