@@ -16,7 +16,14 @@ connectDB()
 
 // Middleware
 app.use(errorHandler)
-app.use(cors())
+const corsOptions = {
+    origin: '*', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    allowedHeaders: ['Content-Type', 'Authorization'], 
+  };
+  
+  app.use(cors(corsOptions));
+  
 
 
 
