@@ -25,10 +25,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.get('/', (res, req) => {
-  return res.json({
+  return {
     'success': true,
     'msg': 'Server is working'
-  })
+  }
 })
   
 
