@@ -1,6 +1,5 @@
 require('dotenv').config()
 const colors = require('colors')
-const cors = require('cors')
 const config = require('./config/env')
 const connectDB = require('./config/db')
 const { errorHandler } = require('./middleware/ErrorMiddleware')
@@ -15,21 +14,8 @@ connectDB()
 
 // Middleware
 app.use(errorHandler)
-const corsOptions = {
-    origin: '*', 
-    methods: '*', 
-    allowedHeaders: '*', 
-    allowOrigin: '*'
-  };
-  
-app.use(cors(corsOptions));
 
-app.get('/', (res, req) => {
-  return {
-    'success': true,
-    'msg': 'Server is working'
-  }
-})
+
   
 
 
