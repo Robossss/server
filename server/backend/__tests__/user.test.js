@@ -21,7 +21,7 @@ beforeAll(async () => {
 }, 1000000);
 
 afterAll(async () => {
-    // await clearDatabase()
+    await clearDatabase()
     await mongoose.connection.close();
 }, 1000000);
   

@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler')
 const Module = require('../models/ModuleModel')
 const Lessons = require('../models/LessonModel')
+const Progress = require('../models/ProgressModel')
+const { json } = require('express')
 
 const createModule = asyncHandler(async(req, res) => {
     if(!req.user){
@@ -30,6 +32,7 @@ const createModule = asyncHandler(async(req, res) => {
 
     res.status(201).json(module)
 })
+
 const getModules = asyncHandler(async(req, res) => {
     if(!req.user){
         res.status(400)
@@ -38,8 +41,19 @@ const getModules = asyncHandler(async(req, res) => {
 
     const modules = await Module.find()
 
-    res.status(200).json(modules)
+    const populatedModules = await Promise.all(
+        modules.map(async (course) => {
+            const progress = await Progress.find({
+                user : req.user._id,
+                level: course._id
+            })
+
+            return { progress, modules}
+        })
+    )
+    res.status(200).json(populatedModules)
 })
+
 const updateModule = asyncHandler(async(req, res) => {
     if(!req.user){
         res.status(400)
