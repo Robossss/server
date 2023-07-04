@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/UserModel')
 const config = require('../config/env')
 
-
-
 const registerUser = asyncHandler(async(req, res) => {
     if(!req.body){
         res.status(400)
@@ -60,14 +58,16 @@ const registerUser = asyncHandler(async(req, res) => {
             lastName: lastName,
             role: role
         })
+        return res.status(201).json({
+            msg: `An account has been created for ${username}`,
+            token: generateToken(user._id)
+        })
     } catch (error) {
         res.status(400)
         throw new Error(error.message)
     }
 
-    return res.status(201).json({
-        msg: `An account has been created for ${username}`
-    })
+    
 
 })
 

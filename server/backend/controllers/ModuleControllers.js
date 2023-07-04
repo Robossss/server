@@ -2,7 +2,6 @@ const asyncHandler = require('express-async-handler')
 const Module = require('../models/ModuleModel')
 const Lessons = require('../models/LessonModel')
 const Progress = require('../models/ProgressModel')
-const { json } = require('express')
 
 const createModule = asyncHandler(async(req, res) => {
     if(!req.user){
@@ -42,10 +41,10 @@ const getModules = asyncHandler(async(req, res) => {
     const modules = await Module.find()
 
     const populatedModules = await Promise.all(
-        modules.map(async (course) => {
+        modules.map(async (module) => {
             const progress = await Progress.find({
                 user : req.user._id,
-                level: course._id
+                level: module._id
             })
 
             return { progress, modules}

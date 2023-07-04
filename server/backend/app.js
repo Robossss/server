@@ -24,6 +24,7 @@ app.use('/api/v1/auth', require('./routes/UserRoutes'))
 app.use('/api/v1/qa', require('./routes/QARoutes'))
 app.use('/api/v1/module', require('./routes/ModuleRoutes'))
 app.use('/api/v1/lesson', require('./routes/LessonRoutes'))
+app.use('/api/v1/progress', require('./routes/ProgressRoutes'))
 
 
 module.exports = app
