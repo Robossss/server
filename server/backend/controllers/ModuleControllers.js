@@ -45,7 +45,7 @@ const getModules = asyncHandler(async(req, res) => {
             const progress = await Progress.find({
                 user : req.user._id,
                 level: module._id
-            })
+            }).populate('level', 'name')
 
             return { progress, modules}
         })

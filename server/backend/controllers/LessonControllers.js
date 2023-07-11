@@ -17,7 +17,7 @@ const createLesson = asyncHandler(async(req, res) => {
         throw new Error('Bad request. No body')
     }
 
-    const { title, content, module } = req.body
+    const { subject, title, content, module } = req.body
 
     if(!title){
         res.status(400)
@@ -42,7 +42,8 @@ const createLesson = asyncHandler(async(req, res) => {
     const lesson = await Lesson.create({
         title,
         content,
-        module
+        module,
+        subject
     })
 
     res.status(201).json(lesson)
