@@ -111,7 +111,7 @@ const updateLesson = asyncHandler(async(req, res) => {
 
     const updatedLesson = await Lesson.findByIdAndUpdate(req.params.id, req.body, { new: true })
 
-    res.status(201).json(updateLesson)
+    res.status(201).json(updatedLesson)
 })
 
 

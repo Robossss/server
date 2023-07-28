@@ -14,7 +14,14 @@ const LessonSchema = mongoose.Schema({
             content: {
                 type: String,
                 required: true
-            }
+            },
+            images: [
+                {
+                    avatar: {
+                        type: String
+                    }
+                }
+            ],
         }
     ],
     module: {

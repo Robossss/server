@@ -3,11 +3,8 @@ const Module = require('../models/ModuleModel')
 const Lessons = require('../models/LessonModel')
 const Progress = require('../models/ProgressModel')
 
+
 const createModule = asyncHandler(async(req, res) => {
-    if(!req.user){
-        res.status(400)
-        throw new Error('Not authenticated')
-    }
     if(req.user.role !== 'admin'){
         res.status(400)
         throw new Error('Not authorized. Only admins allowed')
@@ -18,15 +15,18 @@ const createModule = asyncHandler(async(req, res) => {
         throw new Error('Bad request. No body')
     }
 
-    const { name } = req.body
+    const { name, images } = req.body
 
     if(!name) {
         res.status(400)
         throw new Error('Name is required')
     }
 
+    
+
     const module = await Module.create({
-        name
+        name,
+        images
     })
 
     res.status(201).json(module)
@@ -45,7 +45,7 @@ const getModules = asyncHandler(async(req, res) => {
             const progress = await Progress.find({
                 user : req.user._id,
                 level: module._id
-            }).populate('level', 'name')
+            }).populate('level', 'name images')
 
             return { progress, modules}
         })
@@ -127,14 +127,14 @@ const getModuleLessons = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Not authenticated')
     }
-
+    
     const { id } = req.params
 
     if(!id){
         res.status(400)
         throw new Error('There is no id. Bad request')
     }
-    const module = await Module.findById(id)
+    const module = await Module.findById(id).select('-images')
     
     if(!module){
         res.status(404)
@@ -143,11 +143,11 @@ const getModuleLessons = asyncHandler(async (req, res) => {
 
     const lessons = await Lessons.find({
         module: module._id
-    })
-
+    }).populate('module', 'name')
+    
     res.status(200).json({
-        module,
-        lessons
+        lessons,
+        module
     })
 })
 

@@ -1,6 +1,7 @@
 const router = require('express').Router()
 
 const { protect } = require('../middleware/AuthMiddleware')
+const upload = require('../utils/multer')
 
 const {
     createModule,
