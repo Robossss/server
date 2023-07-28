@@ -56,6 +56,10 @@ const updateProgress = asyncHandler(async (req, res) => {
         throw new Error('Please enter all fields')
     }
 
+    if (progress < 0) {
+        res.status(400)
+        throw new Error('Please progress cannot be less than 0')
+    }
     const module = await Module.findById(level)
 
     if (!module) {
@@ -72,12 +76,13 @@ const updateProgress = asyncHandler(async (req, res) => {
         throw new Error('Please start the module afresh')
     }
 
-    if (progress == 100) {
+    if (progress >= 100) {
         progressLevel.progressType = 'Completed'
         progressLevel.progress = 100
         await progressLevel.save()
     }
     progressLevel.progress = progress
+    progressLevel.progressType = 'In Progress'
     await progressLevel.save()
     
     res.status(200).json({
