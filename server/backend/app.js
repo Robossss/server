@@ -25,6 +25,7 @@ app.use('/api/v1/qa', require('./routes/QARoutes'))
 app.use('/api/v1/module', require('./routes/ModuleRoutes'))
 app.use('/api/v1/lesson', require('./routes/LessonRoutes'))
 app.use('/api/v1/progress', require('./routes/ProgressRoutes'))
+app.use('/api/v1/video', require('./routes/VideoRoutes'))
 
 
 module.exports = app

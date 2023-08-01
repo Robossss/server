@@ -5,20 +5,14 @@ const QASchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  option1: {
-    type: String,
-    required: true,
-  },
-  option2: {
-    type: String,
-    required: true,
-  },
-  option3: {
-    type: String,
-  },
-  option4: {
-    type: String,
-  },
+  options: [
+    {
+      option: {
+        type: String
+      }
+      
+    }
+  ],
   correctOption: {
     type: String,
     required: true

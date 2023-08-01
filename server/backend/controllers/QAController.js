@@ -18,7 +18,7 @@ const createQA = asyncHandler(async(req, res) => {
         throw new Error('Bad request. No body')
     }
 
-    const { question, option1, option2, correctOption, level } = req.body
+    const { question, options, correctOption, level } = req.body
 
     const module = await Module.findById(level)
 
@@ -30,14 +30,7 @@ const createQA = asyncHandler(async(req, res) => {
         res.status(400)
         throw new Error('Question is required')
     }
-    if(!option1) {
-        res.status(400)
-        throw new Error('Option One is required')
-    }
-    if(!option2) {
-        res.status(400)
-        throw new Error('Option Two is required')
-    }
+    
     if(!correctOption) {
         res.status(400)
         throw new Error('Correct Option is required')
@@ -45,10 +38,7 @@ const createQA = asyncHandler(async(req, res) => {
 
     const qa = await QA.create({
         question,
-        option1,
-        option2,
-        option3: req.body.option3,
-        option4: req.body.option4,
+        options,
         correctOption,
         level
     })

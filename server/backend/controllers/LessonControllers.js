@@ -70,6 +70,18 @@ const getLessons = asyncHandler(async(req, res) => {
 
 })
 
+const getLesson = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const lesson = await Lesson.findById(id)
+
+    if(!lesson){
+        res.status(404)
+        throw new Error('Lesson cannot be found')
+    }
+
+    res.status(200).json(lesson)
+})
 const updateLesson = asyncHandler(async(req, res) => {
     if(!req.user){
         res.status(400)
@@ -85,16 +97,9 @@ const updateLesson = asyncHandler(async(req, res) => {
         throw new Error('Bad request. No body')
     }
 
-    const { title, content, module } = req.body
+    const { subject, lessons, module } = req.body
 
-    if(!title){
-        res.status(400)
-        throw new Error('Title is required')
-    }
-    if(!content){
-        res.status(400)
-        throw new Error('Content is required')
-    }
+    
     if(!module){
         res.status(400)
         throw new Error('Module is required')
@@ -102,7 +107,7 @@ const updateLesson = asyncHandler(async(req, res) => {
 
     const { id } = req.params
 
-    const lesson = Lesson.findById(id)
+    const lesson = await Lesson.findById(id)
 
     if(!lesson){
         res.status(404)
@@ -147,5 +152,6 @@ module.exports = {
     createLesson,
     getLessons,
     updateLesson,
-    deleteLesson
+    deleteLesson,
+    getLesson
 }

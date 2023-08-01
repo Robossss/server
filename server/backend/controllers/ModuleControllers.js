@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Module = require('../models/ModuleModel')
 const Lessons = require('../models/LessonModel')
 const Progress = require('../models/ProgressModel')
+const Video = require('../models/VideoModel')
 
 
 const createModule = asyncHandler(async(req, res) => {
@@ -140,6 +141,9 @@ const getModuleLessons = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error(`module with id of ${ id } does not exist`)
     }
+    const video = await Video.findOne({
+        module: module._id
+    })
 
     const lessons = await Lessons.find({
         module: module._id
@@ -147,7 +151,8 @@ const getModuleLessons = asyncHandler(async (req, res) => {
     
     res.status(200).json({
         lessons,
-        module
+        module,
+        video
     })
 })
 
