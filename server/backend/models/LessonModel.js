@@ -21,9 +21,12 @@ const LessonSchema = mongoose.Schema({
                         type: String
                     }
                 }
-            ],
+            ] 
         }
     ],
+    video: {
+        type: String
+    },
     module: {
         type: mongoose.Types.ObjectId,
         required: true
