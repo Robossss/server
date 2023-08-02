@@ -16,7 +16,7 @@ const createModule = asyncHandler(async(req, res) => {
         throw new Error('Bad request. No body')
     }
 
-    const { name, images } = req.body
+    const { name, images, description } = req.body
 
     if(!name) {
         res.status(400)
@@ -27,6 +27,7 @@ const createModule = asyncHandler(async(req, res) => {
 
     const module = await Module.create({
         name,
+        description,
         images
     })
 
@@ -47,9 +48,9 @@ const getModules = asyncHandler(async(req, res) => {
                 user : req.user._id,
                 level: module._id
             }).populate('level', 'name images')
-
             return { progress, modules}
-        })
+        }   
+        ) 
     )
     res.status(200).json(populatedModules)
 })
@@ -123,6 +124,34 @@ const deleteModule = asyncHandler(async(req, res) => {
     res.status(204).json({ id })
 })
 
+const getModule = asyncHandler(async(req, res) => {
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authenticated')
+    }
+    if(req.user.role !== 'admin'){
+        res.status(400)
+        throw new Error('Not authorized. Only admins allowed')
+    }
+
+    const { id } = req.params
+
+    if(!id){
+        res.status(400)
+        throw new Error('There is no id. Bad request')
+    }
+    const module = await Module.findById(id)
+    
+    if(!module){
+        res.status(404)
+        throw new Error(`module with id of ${ id } does not exist`)
+    }
+
+    
+
+    res.status(200).json({ module })
+})
+
 const getModuleLessons = asyncHandler(async (req, res) => {
     if(!req.user){
         res.status(400)
@@ -159,6 +188,7 @@ const getModuleLessons = asyncHandler(async (req, res) => {
 module.exports = {
     createModule,
     getModules,
+    getModule,
     updateModule,
     deleteModule,
     getModuleLessons

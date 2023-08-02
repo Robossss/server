@@ -6,6 +6,7 @@ const upload = require('../utils/multer')
 const {
     createModule,
     getModules,
+    getModule,
     updateModule,
     deleteModule,
     getModuleLessons
@@ -14,6 +15,7 @@ const {
 
 router.post('/create', protect, createModule)
 router.get('/', protect, getModules)
+router.get('/single/:id', protect, getModule)
 
 router.route('/:id')
         .get(protect, getModuleLessons)

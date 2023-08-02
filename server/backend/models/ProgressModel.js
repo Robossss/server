@@ -24,6 +24,7 @@ const ProgressSchema = new mongoose.Schema({
 
 // Create a compound index on level and user fields
 ProgressSchema.index({ level: 1, user: 1 }, { unique: true });
+
 // Pre-save hook
 ProgressSchema.pre('save', function (next) {
     if (this.progress >= 100) {
