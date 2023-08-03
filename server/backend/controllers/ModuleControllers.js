@@ -41,18 +41,35 @@ const getModules = asyncHandler(async(req, res) => {
     }
 
     const modules = await Module.find()
-
+    
+    // get the progress attached to the modules
     const populatedModules = await Promise.all(
         modules.map(async (module) => {
             const progress = await Progress.find({
                 user : req.user._id,
                 level: module._id
             }).populate('level', 'name images')
-            return { progress, modules}
+            
+            return progress
         }   
         ) 
     )
-    res.status(200).json(populatedModules)
+    
+    let oldProgressArray = []
+    
+    oldProgressArray.push(populatedModules[0][0])
+    oldProgressArray.push(populatedModules[1][0])
+    // Construct the progress array dynamically
+    // const progressArray = populatedModules.map(progress => ({ progress }));
+
+   
+    // Create the final object
+    const result = {
+        progress: oldProgressArray,
+        modules
+    };
+
+    res.status(200).json(result);
 })
 
 const updateModule = asyncHandler(async(req, res) => {
